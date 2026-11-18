@@ -1,0 +1,22 @@
+node_modules
+.DS_Store
+*.log
+playwright-report/
+test-results/
+
+# built output (npm publish builds it: prepublishOnly)
+dist/
+vscode/app/
+*.vsix
+*.tgz
+
+# local tool state, not part of the project
+.claude/
+.claude-flow/
+.swarm/
+.impeccable/
+ruvector.db
+exports/
+
+# screenshots taken from real sessions: they stay on this Mac (anything shared is shot with ?demo)
+docs/screens/local/

@@ -1,0 +1,785 @@
+/* Fansub Night extras: music corner, Pomodoro line, YouTube player, mini window.
+   Same rules as styles.css: ink, subtitle white, yellow only for waiting. */
+
+/* music corner (lower rail, under "Now") */
+.music {
+  position: relative;
+  margin-top: 6px;
+}
+.music-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--rule-2);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--paper);
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.music-start:hover {
+  border-color: var(--paper);
+}
+/* "Start the music", and beside it your own music */
+.music-start-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.music-own {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.sound-h {
+  margin: 4px 0 -2px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--paper);
+}
+.yt-kind {
+  margin-right: 8px;
+  font-family: var(--sans);
+  font-weight: 800;
+  color: var(--muted);
+}
+.music-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+}
+.music-title {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  padding: 0 4px;
+}
+.music-title b {
+  font-size: 12.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.music-title small {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+.sound-panel {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 12px);
+  z-index: 20;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--ink);
+  border: 1px solid var(--rule-2);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+}
+.sound-panel .note {
+  margin: 0;
+  line-height: 1.45;
+}
+.yt-form {
+  display: flex;
+  gap: 6px;
+}
+.yt-form .search {
+  height: 34px;
+  font-size: 13px;
+}
+.yt-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.yt-links .linkish {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+.vol {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.vol input[type='range'] {
+  accent-color: var(--paper);
+}
+.vol input[type='checkbox'] {
+  justify-self: start;
+  accent-color: var(--paper);
+  width: 16px;
+  height: 16px;
+}
+/* room sounds: an on/off box and its level on one line */
+.vol-pair {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.vol-pair input[type='range'] {
+  flex: 1;
+  min-width: 0;
+}
+.vol-pair input[type='range']:disabled {
+  opacity: 0.4;
+}
+
+/* Spotify's player: you play and skip with its own buttons, so it stays in view (its compact size) */
+.tv.tv-spotify {
+  height: 152px;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: transparent;
+}
+/* the YouTube player stays visible (YouTube requires at least 200 x 200) */
+.tv {
+  position: fixed;
+  left: 16px;
+  bottom: 156px;
+  z-index: 15;
+  width: 356px;
+  height: 200px;
+  border: 1px solid var(--rule-2);
+  background: #000;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+}
+.tv iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Pomodoro line */
+.pomo {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+}
+button.pomo {
+  text-decoration: underline;
+  text-decoration-color: var(--rule-2);
+  text-underline-offset: 3px;
+}
+button.pomo:hover {
+  color: var(--paper);
+}
+.pomo.on b {
+  color: var(--paper);
+  font-weight: 800;
+}
+.pomo.on.break b {
+  color: var(--sage);
+}
+.pomo .mono {
+  color: var(--paper);
+  font-size: 13px;
+}
+/* the focus line with its length choice next to it, and the little panel above it */
+.pomo-wrap {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-top: 6px;
+}
+.pomo-wrap .pomo {
+  margin-top: 0;
+}
+.pomo-length {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--faint);
+}
+.pomo-length:hover,
+.pomo-length[aria-expanded='true'] {
+  color: var(--paper);
+}
+.pomo-panel {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  z-index: 20;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--ink);
+  border: 1px solid var(--rule-2);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+}
+.pomo-panel .note {
+  margin: 0;
+  line-height: 1.45;
+}
+.pomo-row {
+  display: grid;
+  grid-template-columns: 48px auto auto;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.pomo-row .seg button {
+  height: 28px;
+  padding: 0 9px;
+  white-space: nowrap;
+}
+.pomo-custom {
+  width: 72px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--rule-2);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.pomo-custom[aria-invalid='true'] {
+  border-color: var(--peach);
+}
+
+/* mini window (Document Picture-in-Picture) */
+.mini-body {
+  margin: 0;
+  background: var(--ink);
+  overflow: auto;
+}
+.mini {
+  padding: 12px 14px;
+}
+.mini-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.mini-head .title-card {
+  width: auto;
+  font-size: 22px;
+}
+.mini-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mini-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'who t' 'say say';
+  gap: 0 8px;
+  width: 100%;
+  padding: 8px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  color: var(--paper);
+  text-align: left;
+}
+.mini-row:hover:not(:disabled) {
+  background: rgba(246, 241, 228, 0.05);
+}
+.mini-row:disabled {
+  cursor: default;
+}
+.mini-row .who {
+  grid-area: who;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-row .say {
+  grid-area: say;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-row .t {
+  grid-area: t;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--paper-2);
+}
+.mini-row.needs-you .who,
+.mini-row.needs-you .say,
+.mini-row.needs-you .t {
+  color: var(--yellow);
+}
+.mini-row.idle .say {
+  color: var(--faint);
+  font-size: 13px;
+}
+
+/* ---------- customise mode: what to add, the selected item's tools ---------- */
+.customize {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  bottom: 16px;
+  z-index: 4;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink);
+  border: 1px solid var(--rule);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.cz-head {
+  padding: 16px 16px 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.cz-head .title-card {
+  font-size: 20px;
+}
+.cz-theme {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.cz-now {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cz-sel-name {
+  font-size: 15px;
+  font-weight: 800;
+}
+.cz-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cz-tools .icon-btn {
+  height: 28px;
+  font-size: 12px;
+}
+.cz-tools .cz-remove {
+  color: var(--coral);
+}
+.cz-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.cz-hint.cz-blocked {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(242, 193, 78, 0.12);
+  color: #f6d98e;
+}
+.cz-hint b {
+  color: var(--paper);
+}
+.cz-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px 16px 16px;
+}
+.cz-sec h3 {
+  margin: 14px 0 8px;
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cz-group {
+  margin-bottom: 10px;
+}
+.cz-group-name {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--paper-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+.cz-items {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.cz-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px 7px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--ink-2);
+  color: var(--paper-2);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.cz-thumb {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+}
+.cz-thumb:empty {
+  background: var(--ink-3);
+}
+.cz-thumb img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+.cz-label {
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.cz-item:hover {
+  color: var(--paper);
+  border-color: var(--rule-2);
+}
+.cz-item[aria-pressed='true'] {
+  background: var(--paper);
+  border-color: var(--paper);
+  color: var(--ink);
+}
+.cz-foot {
+  padding: 12px 16px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.cz-foot .btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+@media (max-width: 720px) {
+  .customize {
+    top: auto;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+    max-height: 55%;
+  }
+}
+
+/* an idle creature's tag stays quiet: its name, dimmed; what it's doing on hover */
+.chip.quiet .chip-top {
+  font-size: 13px;
+  opacity: 0.72;
+}
+.chip.quiet .chip-sub {
+  display: none;
+}
+.chip.quiet:hover .chip-top,
+.chip.quiet:focus-visible .chip-top {
+  opacity: 1;
+}
+.chip.quiet:hover .chip-sub,
+.chip.quiet:focus-visible .chip-sub {
+  display: block;
+}
+
+/* the top bar gained a Customize button and the weather: tighter spacing, nothing wraps */
+.topbar {
+  gap: 12px;
+}
+.topbar .counts {
+  gap: 12px;
+}
+.topbar .views button {
+  padding: 0 12px;
+}
+.topbar .seg button {
+  padding: 0 9px;
+}
+.topbar .icon-btn,
+.topbar .seg button {
+  white-space: nowrap;
+}
+.topbar .select.place {
+  width: auto;
+  min-width: 0;
+  flex: none;
+}
+/* with the weather switch the bar is full: the counts give way first */
+.topbar .counts {
+  min-width: 0;
+  overflow: hidden;
+}
+.cz-theme {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* the top bar's buttons keep their size */
+.topbar .icon-btn {
+  flex: none;
+}
+/* laptop widths: tighter still, so the counts keep their words. The brand is
+   drawn squeezed (title-card's scaleX), so its box is wider than what shows:
+   that space goes back to the bar. */
+@media (max-width: 1480px) {
+  .topbar {
+    padding: 0 20px;
+  }
+  .topbar .brand {
+    margin-right: -24px;
+  }
+  .topbar .views button {
+    padding: 0 10px;
+  }
+  .topbar .icon-btn {
+    padding: 0 8px;
+  }
+  .topbar .select.place {
+    padding: 0 6px;
+  }
+}
+@media (max-width: 1340px) {
+  .needs-btn .for-you {
+    display: none;
+  }
+}
+/* the helpers count gives way to the Weather choice (the rail under the room says it too) */
+@media (max-width: 1380px) {
+  .topbar .counts .count.helpers {
+    display: none;
+  }
+}
+/* below 1280 px the bar wraps into two rows (the tabs go under) */
+@media (max-width: 1279px) {
+  .topbar {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    padding: 8px 16px;
+  }
+  .topbar .views {
+    order: 5;
+    width: 100%;
+    height: 40px;
+    overflow-x: auto;
+  }
+  .topbar .counts {
+    flex: 1 1 auto;
+  }
+}
+
+/* long session names are cut short on the scene's tags (the full name is in the captions and the card) */
+.chip .chip-top {
+  max-width: 260px;
+}
+.chip .chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.chip .chip-sub {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* the whole picture is graded by its place and by the weather, fading from one
+   weather to the next: a sunny day brighter and warmer, rain cooler and dimmer,
+   snow brighter and cooler (the same functions in the same order everywhere, so
+   it can fade) */
+.stage {
+  --grade-place: sepia(0.06) saturate(0.94) hue-rotate(0deg);
+  --grade-weather: brightness(1) saturate(1) contrast(1) hue-rotate(0deg);
+}
+.stage canvas {
+  filter: var(--grade-place) var(--grade-weather);
+  transition: filter 2.5s ease;
+}
+.stage[data-world='office'] {
+  --grade-place: sepia(0.1) saturate(0.9) hue-rotate(-6deg);
+}
+.stage[data-weather='clear'] {
+  --grade-weather: brightness(1.02) saturate(1.03) contrast(1) hue-rotate(0deg);
+}
+.stage[data-weather='rain'] {
+  --grade-weather: brightness(0.92) saturate(0.86) contrast(1) hue-rotate(-5deg);
+}
+.stage[data-weather='sunny'] {
+  --grade-weather: brightness(1.08) saturate(1.07) contrast(1.02) hue-rotate(4deg);
+}
+.stage[data-weather='snow'] {
+  --grade-weather: brightness(1.05) saturate(0.84) contrast(0.98) hue-rotate(-8deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage canvas {
+    transition: none;
+  }
+}
+
+/* a helper's tag, in its session's colour: its name or its task (a long one is
+   cut short; its tooltip has it all), and under it whose helper it is */
+.labels .bot-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 200px;
+  line-height: 1.22;
+}
+.labels .bot-chip > span {
+  max-width: 100%;
+  padding: 0 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.labels .bot-chip.quiet {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--c, var(--blue));
+  opacity: 0.85;
+  -webkit-text-stroke: 3px var(--outline);
+  paint-order: stroke fill;
+}
+.labels .bot-chip .bot-for {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--paper-2);
+}
+.labels .bot-chip .bot-for b {
+  color: var(--c, var(--blue));
+  font-weight: 800;
+}
+/* pointed at (it, its session's tag, or another of that session's helpers) */
+.labels .bot-chip.linked {
+  opacity: 1;
+}
+.labels .chip.quiet.linked .chip-top {
+  opacity: 1;
+}
+
+/* the line from a helper's tag to its session's tag (tide/Labels.tsx): shown
+   while either is pointed at or focused, and while the session is selected */
+.labels > .links {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  will-change: auto;
+}
+.links g {
+  opacity: 0.45;
+  transition: opacity 0.18s ease;
+}
+.links g.on {
+  opacity: 1;
+}
+/* a row of beads in the session's colour, each with the tags' dark outline */
+.links path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 0 6.5;
+}
+.links .link-under {
+  stroke: var(--outline);
+  stroke-width: 4.6;
+}
+.links .link-line {
+  stroke: var(--c, var(--blue));
+  stroke-width: 2.6;
+}
+.links .link-end {
+  fill: var(--c, var(--blue));
+  stroke: var(--outline);
+  stroke-width: 1.6;
+}
+@media (prefers-reduced-motion: reduce) {
+  .links g {
+    transition: none;
+  }
+}
+@media (max-width: 600px) {
+  .labels .bot-chip,
+  .labels > .links {
+    display: none;
+  }
+}
+
+/* the room alone (?embed=panel: the editor's bottom panel), with a small bar over its top right */
+.compact-bar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 3px 3px 10px;
+  border: 1px solid var(--rule-2);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ink) 86%, transparent);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.compact-bar .needs-btn {
+  height: 24px;
+  padding: 0 8px;
+}
+.compact-bar .icon-btn {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 12px;
+}

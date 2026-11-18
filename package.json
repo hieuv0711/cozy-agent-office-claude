@@ -1,0 +1,75 @@
+{
+  "name": "cozy-agent-office-claude",
+  "version": "0.1.0",
+  "description": "Your Claude Code sessions as little people at work in a cozy 3D room: a loft office, a ramen kitchen or a toy workshop. Reads Claude Code's files on this computer, installs nothing into Claude Code, serves on 127.0.0.1 only.",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "agents",
+    "subagents",
+    "visualizer",
+    "3d",
+    "three.js",
+    "office",
+    "lofi",
+    "pixel-office"
+  ],
+  "license": "MIT",
+  "author": "Hieu Vo",
+  "homepage": "https://github.com/hieuv0711/cozy-agent-office-claude#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hieuv0711/cozy-agent-office-claude.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hieuv0711/cozy-agent-office-claude/issues"
+  },
+  "type": "module",
+  "bin": {
+    "cozy-agent-office-claude": "bin/agent-office.mjs"
+  },
+  "files": [
+    "bin/",
+    "server/",
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.18"
+  },
+  "scripts": {
+    "start": "node server/index.mjs",
+    "prepare": "node scripts/icloud-ignore.mjs",
+    "dev:server": "node --watch server/index.mjs",
+    "dev:web": "vite --config web/vite.config.ts",
+    "build": "vite build --config web/vite.config.ts",
+    "build:kitchen": "vite build --config web/vite.standalone.config.ts && node scripts/inline-html.mjs node_modules/.cache/standalone/kitchen.html exports/tidepool-kitchen.html",
+    "typecheck": "tsc -p web/tsconfig.json --noEmit",
+    "selftest": "node server/selftest.mjs",
+    "test:e2e": "playwright test",
+    "prepublishOnly": "npm run build",
+    "build:vscode": "node scripts/build-vscode.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/dm-mono": "5.3.0",
+    "@fontsource/m-plus-1-code": "5.3.1",
+    "@fontsource/m-plus-rounded-1c": "5.3.0",
+    "@fontsource/outfit": "5.3.0",
+    "@fontsource/shippori-mincho-b1": "5.3.0",
+    "@playwright/test": "1.64.1",
+    "@react-three/drei": "10.7.9",
+    "@react-three/fiber": "9.8.2",
+    "@react-three/postprocessing": "3.2.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/three": "0.186.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "postprocessing": "6.39.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "three": "0.186.1",
+    "typescript": "5.9.3",
+    "vite": "6.4.5"
+  }
+}

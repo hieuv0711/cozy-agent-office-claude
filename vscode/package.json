@@ -1,0 +1,73 @@
+{
+  "name": "cozy-agent-office-claude",
+  "displayName": "Agent Office",
+  "description": "Your Claude Code sessions as little people at work in a cozy 3D room: a loft office, a ramen kitchen or a toy workshop. Reads Claude Code's files on this computer; installs nothing into Claude Code.",
+  "version": "0.1.0",
+  "publisher": "YOUR-PUBLISHER",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "homepage": "https://github.com/hieuv0711/cozy-agent-office-claude#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hieuv0711/cozy-agent-office-claude.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hieuv0711/cozy-agent-office-claude/issues"
+  },
+  "galleryBanner": {
+    "color": "#0e1018",
+    "theme": "dark"
+  },
+  "keywords": ["claude code", "claude", "agents", "subagents", "visualizer", "3d", "office"],
+  "categories": ["Visualization", "Other"],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": ["onView:agentOffice.room", "onCommand:agentOffice.open", "onCommand:agentOffice.openInBrowser"],
+  "contributes": {
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "agentOffice",
+          "title": "Agent Office",
+          "icon": "media/room.svg"
+        }
+      ]
+    },
+    "views": {
+      "agentOffice": [
+        {
+          "type": "webview",
+          "id": "agentOffice.room",
+          "name": "Room",
+          "icon": "media/room.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "agentOffice.open",
+        "title": "Open the Room in an Editor Tab",
+        "category": "Agent Office"
+      },
+      {
+        "command": "agentOffice.openInBrowser",
+        "title": "Open the Room in the Browser",
+        "category": "Agent Office"
+      }
+    ],
+    "configuration": {
+      "title": "Agent Office",
+      "properties": {
+        "agentOffice.port": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Port for the room's local server on 127.0.0.1. 0 picks a free one."
+        }
+      }
+    }
+  }
+}
