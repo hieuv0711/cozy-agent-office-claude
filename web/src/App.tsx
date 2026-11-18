@@ -557,6 +557,7 @@ export default function App() {
       {view === 'office' && office && !editing && !roomOnly && (
         <CaptionRail
           sessions={sessions}
+          replaying={!!replaySess}
           selected={sel.sid}
           onSelect={(id) => {
             setShowAll(false);

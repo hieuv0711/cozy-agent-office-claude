@@ -926,9 +926,9 @@ The whole-session chart with three tracks per agent is gone.
 ### HI-09: Watch it in the room, then back
 | Step | Action | Expected Result |
 |------|--------|----------------|
-| 1 | Click "Watch in the room" | The room acts out the session: one person, no card; the top bar says "Watching a replay". A replay bar: the title, "Request 1 of 3 · 08:36" with what you asked, "Now" and the step in words, Previous / Pause / Next, the strip of requests, Slow / Normal / Fast |
+| 1 | Click "Watch in the room" | The room acts out the session: one person, no card; the top bar says "Watching a replay" and the caption rail is headed "Replay", not "Now". A replay bar: the title, "Request 1 of 3 · 08:36" with what you asked, "Now" and the step in words, Previous / Pause / Next, the strip of requests, Slow / Normal / Fast |
 | 2 | Pause; Next; Previous | Request 2 of 3 with its words; back to request 1 |
-| 3 | Click "Back to live", then History | Live sessions and the counts are back; History opens on the same session, its replay where you left it ("2 of 3") |
+| 3 | Click "Back to live", then History | Live sessions and the counts are back, the rail headed "Now" again; History opens on the same session, its replay where you left it ("2 of 3") |
 
 **Tests**: replay in the room · **Preconditions**: HI-04 · **User role**: user · **Priority**: High
 

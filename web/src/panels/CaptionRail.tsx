@@ -124,9 +124,11 @@ interface Props {
   showAll: boolean;
   setShowAll: (v: boolean) => void;
   onGoTo: (id: string) => void;
+  /** The room is acting out a past session ("Watch in the room"): the rail speaks for it, not for now. */
+  replaying?: boolean;
 }
 
-export function CaptionRail({ sessions, selected, onSelect, showAll, setShowAll, onGoTo }: Props) {
+export function CaptionRail({ sessions, selected, onSelect, showAll, setShowAll, onGoTo, replaying = false }: Props) {
   const [note, setNote] = useState('');
   const waiting = sessions.filter((s) => s.status === 'needs-you').sort((a, b) => a.statusSince - b.statusSince);
   const working = sessions
@@ -158,7 +160,7 @@ export function CaptionRail({ sessions, selected, onSelect, showAll, setShowAll,
           onClick={() => setShowAll(!showAll)}
           {...tip(showAll ? 'Back to the few who are speaking now' : 'List every session and what it is doing, not just the ones speaking now', showAll ? 'Every session' : 'Now')}
         >
-          <span className="title-card">Now</span>
+          <span className="title-card">{replaying ? 'Replay' : 'Now'}</span>
           <span>
             {sessions.length} session{sessions.length === 1 ? '' : 's'}
             {helpers ? ` · ${helpers} helper${helpers === 1 ? '' : 's'}` : ''}
