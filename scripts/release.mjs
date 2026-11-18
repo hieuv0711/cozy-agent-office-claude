@@ -80,7 +80,8 @@ if (cmd === 'bump') {
   if (wrong.length) fail(`The tag says ${version}, but ${wrong.map(([f, v]) => `${f} says ${v}`).join(', ')}. Run npm run bump -- ${version} in a pull request first.`);
   const text = notes(version);
   if (!text || /^-\s*$/.test(text)) fail(`CHANGELOG.md has no notes under "## ${version}".`);
-  process.stdout.write(`${text}\n`);
+  // GitHub shows every line break in a release's text, so join each wrapped line onto its bullet
+  process.stdout.write(`${text.replace(/\n[ \t]+(?=\S)/g, ' ')}\n`);
 } else {
   fail('Usage: node scripts/release.mjs bump <version> | check <tag>');
 }
