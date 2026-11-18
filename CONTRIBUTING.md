@@ -98,7 +98,8 @@ the workflow itself (trusted publishing over OIDC), and npm adds provenance. Eac
 its own site:
 - **npm:** the package's Settings → Trusted Publisher on npmjs.com.
 - **Marketplace:** the Trusted Publishing tab of the `hieuv0711` publisher at
-  https://marketplace.visualstudio.com/manage.
+  https://marketplace.visualstudio.com/manage. A new policy has to be used within 48 hours, or it
+  lapses and has to be made again.
 - **Open VSX:** https://open-vsx.org/user-settings/trusted-publishers.
 
 All three point at this repository, `release.yml` and the `release` environment (Settings →

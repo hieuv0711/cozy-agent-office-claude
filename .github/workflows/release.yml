@@ -54,8 +54,6 @@ jobs:
           fi
       - name: VS Code Marketplace
         run: npx --yes @vscode/vsce@4.1.1 publish --oidc --skip-duplicate --packagePath "cozy-agent-office-claude-$VERSION.vsix"
-      - name: Open VSX
-        run: npx --yes ovsx@1.4.0 publish "cozy-agent-office-claude-$VERSION.vsix" --trusted-publishing --skip-duplicate
       - name: GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -66,3 +64,6 @@ jobs:
             gh release create "$GITHUB_REF_NAME" "cozy-agent-office-claude-$VERSION.vsix" \
               --title "Agent Office $VERSION" --notes-file release-notes.md --verify-tag
           fi
+      # Last, so a problem on Open VSX's side leaves everything else out; re-run the job once it's fixed
+      - name: Open VSX
+        run: npx --yes ovsx@1.4.0 publish "cozy-agent-office-claude-$VERSION.vsix" --trusted-publishing --skip-duplicate
