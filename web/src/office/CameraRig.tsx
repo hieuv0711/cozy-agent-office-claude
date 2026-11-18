@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, type ComponentRef } from 'react';
 import * as THREE from 'three';
 import { loadJSON, saveJSON } from '../lib/store';
-import { cameraUi, closeShot, distanceToZoom, MAX_DIST, MIN_DIST, onCameraCmd, shotFor, streamShotsFor, zoomToDistance, type Preset } from './camera';
+import { cameraUi, closeShot, distanceToZoom, fitFor, MAX_DIST, MIN_DIST, onCameraCmd, shotFor, streamShotsFor, zoomToDistance, type Preset } from './camera';
 import { worldUi } from './world';
 
 type CC = ComponentRef<typeof CameraControls>;
@@ -47,12 +47,15 @@ export function CameraRig({ anchors, selected }: { anchors: Map<string, THREE.Ve
   const selRef = useRef(selected);
   selRef.current = selected;
   const st = useRef({ lastZoomPush: 0, streamShot: 0, streamNext: 0, pausedUntil: 0, tmp: new THREE.Vector3(), tmp2: new THREE.Vector3() });
-  // Tall, narrow windows (phones): pull every shot back so the whole place fits.
+  // Tall, narrow windows (phones) pull every shot back so the whole place fits; very wide, short
+  // ones (an editor's bottom panel) push it in (fitFor).
   const size = useThree((x) => x.size);
   const aspect = size.width / Math.max(1, size.height);
   const fitRef = useRef(1);
-  fitRef.current = aspect < 1.6 ? Math.min(2.7, 1.6 / aspect) : 1;
+  fitRef.current = fitFor(aspect);
   const portrait = fitRef.current > 1;
+  // re-frame the picked shot when the stage's shape changes enough to change the fit
+  const fitStep = Math.round(fitRef.current * 20);
 
   const go = (shot: [number, number, number, number, number, number], smooth = true, slow = false) => {
     const c = ref.current;
@@ -132,7 +135,7 @@ export function CameraRig({ anchors, selected }: { anchors: Map<string, THREE.Ve
     const p = cameraUi.get().preset;
     if (p && p !== 'desk') go(shotFor(p, worldUi.get().id), false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [portrait]);
+  }, [fitStep]);
 
   // a new place: move to its own framing of the current shot (or its wide shot)
   const place = worldUi.use((w) => w.id);

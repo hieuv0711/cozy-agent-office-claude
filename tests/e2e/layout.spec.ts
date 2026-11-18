@@ -110,6 +110,19 @@ test.describe('phone', () => {
       });
       expect(small, `${v}: readable`).toEqual([]);
     }
+    // a card opens as a sheet over the lower part of the window, tall enough to read
+    await viewTab(page, 'Office').click();
+    await waitDrawn(page).catch(() => undefined);
+    // (tags crowd on a phone, so the click goes to the tag itself, not whatever lies over it)
+    await chip(page, 'web-shop-81').dispatchEvent('click');
+    const card = page.locator('aside.panel[aria-label="Agent detail"]');
+    await expect(card).toBeVisible();
+    const cb = (await card.boundingBox())!;
+    const bar = (await page.locator('header.topbar').boundingBox())!;
+    expect(cb.height, 'the card is tall enough to read').toBeGreaterThan(844 * 0.55);
+    expect(cb.y, 'the top bar stays in view above it').toBeGreaterThanOrEqual(bar.y + bar.height - 1);
+    expect(cb.x >= 0 && cb.x + cb.width <= 390, 'the card fits the width').toBe(true);
+    await expect(card.locator('.panel-body')).toBeVisible();
     expectNoErrors(errors);
   });
 });
@@ -117,7 +130,7 @@ test.describe('phone', () => {
 test('LA-04 long names', async ({ page, errors }) => {
   const long = 'a-very-long-session-name-that-keeps-going-'.repeat(4).slice(0, 120);
   expect(long).toHaveLength(120);
-  await new MockOffice(page, [session({ name: long, title: 'Long name test', tool: ['Edit', 'edit', 'src/a.ts'] }), session({ name: 'short-one', tool: ['Read', 'read', 'b.md'] })]).install();
+  const mock = await new MockOffice(page, [session({ name: long, title: 'Long name test', tool: ['Edit', 'edit', 'src/a.ts'] }), session({ name: 'short-one', tool: ['Read', 'read', 'b.md'] })]).install();
   await openScene(page, '?test&weather=clear');
   const tag = chip(page, long);
   await expect(tag).toBeVisible();
@@ -134,5 +147,17 @@ test('LA-04 long names', async ({ page, errors }) => {
   const shown = await where.evaluate((e) => ({ fits: e.scrollWidth <= e.clientWidth + 1, clip: getComputedStyle(e).textOverflow }));
   expect(shown.fits, 'the whole name is visible in the card (it wraps)').toBe(true);
   expect(shown.clip).not.toBe('ellipsis');
+  // it waits for you: the caption cuts the name, never the question, and "Go to …" stays on screen
+  await page.keyboard.press('Escape');
+  await mock.set({ [long]: { status: 'needs-you', waitingFor: 'permission prompt', tool: ['Bash', 'run', 'npm test'] } });
+  const ask = page.locator('.caps .cap.ask');
+  await expect(ask.locator('.say .base')).toHaveText('Can I run npm test?');
+  expect(await ask.locator('.say .base').evaluate((e) => e.scrollWidth <= e.clientWidth + 1), 'the whole question shows').toBe(true);
+  expect(await ask.locator('.who').evaluate((e) => e.scrollWidth > e.clientWidth && getComputedStyle(e).textOverflow === 'ellipsis'), 'the name is cut short with "…"').toBe(true);
+  const go = page.locator('.rail .answer');
+  await expect(go).toContainText('a-very-long');
+  const gb = (await go.boundingBox())!;
+  expect(gb.x + gb.width, 'the button stays on screen').toBeLessThanOrEqual(1440);
+  expect(await go.locator('.answer-label').evaluate((e) => e.scrollWidth > e.clientWidth && getComputedStyle(e).textOverflow === 'ellipsis'), 'its name ends in "…" inside it').toBe(true);
   expectNoErrors(errors);
 });

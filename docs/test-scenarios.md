@@ -638,12 +638,14 @@ Tags that touch get no line (their "for" line says it). At phone widths the help
 
 ---
 
-### CA-08: Tall windows
+### CA-08: Tall windows, and short wide panes
 | Step | Action | Expected Result |
 |------|--------|----------------|
 | 1 | Open on a phone-shaped window | The shot pulls back so the whole room fits |
+| 2 | Open in a short, wide pane (an editor's bottom panel, 1100×320) | The shot pushes in so the people fill the pane, not a thin strip of room; every name tag of someone on the picture stays whole on it, none on top of another |
+| 3 | Open on a 2560×1344 window | The shots stay as framed (neither pulled back nor pushed in) |
 
-**Tests**: portrait fit · **Preconditions**: 390×844 window · **User role**: developer · **Priority**: Low
+**Tests**: portrait fit, short-pane fit · **Preconditions**: 390×844, 1100×320 and 2560×1344 windows · **User role**: developer · **Priority**: Medium
 
 ---
 
@@ -1041,8 +1043,8 @@ The whole-session chart with three tracks per agent is gone.
 ### RA-01: Live captions
 | Step | Action | Expected Result |
 |------|--------|----------------|
-| 1 | Read the rail | A caption per active session (name, what it does, how long); waiting ones in yellow |
-| 2 | More than fit | "+N more speaking" |
+| 1 | Read the rail | A caption per active session (name, what it does, how long); waiting ones in yellow, their whole question shown under the name and time |
+| 2 | More than fit | "+N more speaking", inside the rail |
 | 3 | Click "Now" | Every session is listed |
 
 **Tests**: captions · **Preconditions**: demo · **User role**: developer · **Priority**: High
@@ -1146,6 +1148,7 @@ The players are stood in for by blank pages, so the test never goes to the inter
 | Step | Action | Expected Result |
 |------|--------|----------------|
 | 1 | Open at 390×844; visit each view | Usable, readable, no sideways scroll |
+| 2 | Pick someone in the Office | Their card opens as a sheet over the lower part of the window, tall enough to read; the top of the room stays in view |
 
 **Tests**: layout · **Preconditions**: SH-01 · **User role**: developer · **Priority**: Medium
 
@@ -1155,6 +1158,7 @@ The players are stood in for by blank pages, so the test never goes to the inter
 | Step | Action | Expected Result |
 |------|--------|----------------|
 | 1 | A session has a 120-character name | Its tag is cut short with "…" (no wider than about 260 px); the card shows the whole name |
+| 2 | It waits for you | Its caption still shows the whole question (the name is cut short, not the question); the yellow "Go to …" button ends the name in "…" inside the button and stays on screen |
 
 **Tests**: tags · **Preconditions**: mocked session · **User role**: developer · **Priority**: Medium
 

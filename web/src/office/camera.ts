@@ -17,6 +17,19 @@ export const PRESETS: { id: Preset; label: string; key: string }[] = [
 export const MIN_DIST = 3.5;
 export const MAX_DIST = 30;
 
+/**
+ * How far every shot is pulled back (over 1) or pushed in (under 1) for the stage's shape. The
+ * shots are framed for a 16:10 stage. Tall, narrow ones (phones) pull back so the whole place
+ * fits. Very wide, short ones (an editor's bottom panel) push in, keeping as much of the room's
+ * width in view as a 2.6:1 stage shows, so the people fill the pane instead of a thin strip of
+ * room. Stages in between, a big monitor's included, keep the shots as framed.
+ */
+export function fitFor(aspect: number) {
+  if (aspect < 1.6) return Math.min(2.7, 1.6 / aspect);
+  if (aspect > 2.6) return Math.max(0.55, 2.6 / aspect);
+  return 1;
+}
+
 export type { Shot };
 
 // Each theme frames its own fixed shots (its plan's `shots`): [camera x, y, z,

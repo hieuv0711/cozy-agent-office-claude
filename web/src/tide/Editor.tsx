@@ -306,7 +306,8 @@ function Palette({ title, list, placing }: { title: string; list: CatalogItem[];
                 aria-pressed={placing === d.kind}
                 onClick={() => editor.set({ placing: placing === d.kind ? null : { kind: d.kind, seed: Math.floor(Math.random() * 997) }, selected: null })}
               >
-                <span className="cz-thumb" aria-hidden="true">
+                {/* pictures are drawn one at a time when the panel opens (Thumbs.tsx): one not drawn yet glows softly */}
+                <span className={`cz-thumb${pics[d.kind] ? '' : ' wait'}`} aria-hidden="true">
                   {pics[d.kind] && pics[d.kind] !== 'none' ? <img src={pics[d.kind]} alt="" /> : null}
                 </span>
                 <span className="cz-label">{d.label}</span>

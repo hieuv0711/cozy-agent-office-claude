@@ -110,7 +110,7 @@ export function TideLabels({
       const box = host.current;
       if (!camera || !box) return;
       if (frame++ % 20 === 0) for (const [k, el] of els.current) sizes.current.set(k, measure(el));
-      const chips: { k: string; el: HTMLElement; left: number; top: number; w: number; h: number }[] = [];
+      const chips: { k: string; el: HTMLElement; left: number; top: number; w: number; h: number; inside: boolean }[] = [];
       for (const [k, el] of els.current) {
         const p = labelPos.get(k);
         if (!p) {
@@ -125,8 +125,15 @@ export function TideLabels({
         const [ew, eh, above] = sizes.current.get(k) || measure(el);
         const x = (v.x * 0.5 + 0.5) * w;
         const y = (-v.y * 0.5 + 0.5) * h;
+        // someone on the picture keeps their whole tag on it: a head near the top or a side
+        // (a short editor panel, a phone) would otherwise leave the tag half off the edge. The
+        // tag's point is above the head, so it may be a little over the top while the head shows.
+        // Someone well off the picture keeps their tag off it too.
+        const inside = x >= -ew / 2 && x <= w + ew / 2 && y >= -2 * eh && y <= h;
+        let left = x - ew / 2;
+        if (inside) left = Math.min(Math.max(4, left), Math.max(4, w - ew - 4));
         // helpers' tags are centred on their point; everyone's take part in the overlap pass
-        chips.push({ k, el, left: x - ew / 2, top: k.startsWith('bot:') ? y - eh / 2 : y - above, w: ew, h: eh });
+        chips.push({ k, el, left, top: k.startsWith('bot:') ? y - eh / 2 : y - above, w: ew, h: eh, inside });
       }
       chips.sort((a, b) => b.top - a.top);
       const boxes: Box[] = [];
@@ -140,6 +147,16 @@ export function TideLabels({
           if (!hit) break;
           top = hit.t - c.h - 4;
         }
+        if (c.inside && top < 4) {
+          // no room above (the top of a short pane): from the top edge, below whatever it meets
+          top = 4;
+          for (let guard = 0; guard < 12; guard++) {
+            const hit = boxes.find((p) => c.left < p.r - 4 && c.left + c.w > p.l + 4 && top < p.b && top + c.h > p.t);
+            if (!hit) break;
+            top = hit.b + 4;
+          }
+        }
+        if (c.inside) top = Math.min(top, h - c.h - 4);
         const b = { l: c.left, r: c.left + c.w, t: top, b: top + c.h };
         boxes.push(b);
         // one hidden by the page's own rules (a phone's width) has no size, and no line
