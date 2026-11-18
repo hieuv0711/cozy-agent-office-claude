@@ -22,6 +22,8 @@ const pkg = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
 // the server reads its name and version from ../package.json
 writeFileSync(path.join(app, 'package.json'), `${JSON.stringify({ name: pkg.name, version: pkg.version, private: true, type: 'module' }, null, 2)}\n`);
 cpSync(path.join(root, 'LICENSE'), path.join(ext, 'LICENSE'));
+// the Marketplace and Open VSX show it as the extension's Changelog tab
+cpSync(path.join(root, 'CHANGELOG.md'), path.join(ext, 'CHANGELOG.md'));
 const { name, version } = JSON.parse(readFileSync(path.join(ext, 'package.json'), 'utf8'));
 // vsce needs a Node that can require() ES modules: 20.19 or newer (22.12 or newer on 22)
 const [major, minor] = process.versions.node.split('.').map(Number);

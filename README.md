@@ -11,7 +11,11 @@
 ![react](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=111&style=flat)
 ![tests](https://img.shields.io/badge/end--to--end-Playwright-2ead33?logo=playwright&logoColor=white&style=flat)
 ![license](https://img.shields.io/badge/license-MIT-8c8778?style=flat)
-![npm](https://img.shields.io/npm/v/cozy-agent-office-claude?style=flat&label=npm)
+
+[![npm](https://img.shields.io/npm/v/cozy-agent-office-claude?style=flat&label=npm&logo=npm)](https://www.npmjs.com/package/cozy-agent-office-claude)
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code%20Marketplace-install-0078d4?style=flat)](https://marketplace.visualstudio.com/items?itemName=hieuv0711.cozy-agent-office-claude)
+[![Open VSX](https://img.shields.io/open-vsx/v/hieuv0711/cozy-agent-office-claude?style=flat&label=Open%20VSX)](https://open-vsx.org/extension/hieuv0711/cozy-agent-office-claude)
+[![CI](https://github.com/hieuv0711/cozy-agent-office-claude/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/hieuv0711/cozy-agent-office-claude/actions/workflows/ci.yml)
 
 </div>
 
@@ -102,6 +106,12 @@ VSCodium, Windsurf). Then open the **Agent Office** tab in the bottom panel, bes
 alone, with its name tags and a small bar ("More" opens the whole app in place). For everything at
 once, run **Agent Office: Open the Room in an Editor Tab** from the Command Palette. Start Claude Code
 in any terminal, this editor's included, and someone walks in within a second.
+
+From a terminal: `code --install-extension hieuv0711.cozy-agent-office-claude` (or `cursor` in place
+of `code`). Each version's `.vsix` is also on the
+[Releases](https://github.com/hieuv0711/cozy-agent-office-claude/releases) page, for
+**Extensions: Install from VSIX…** on a computer that can't reach the Marketplace;
+[CHANGELOG.md](CHANGELOG.md) says what changed in each.
 
 ### In your browser
 
@@ -334,12 +344,15 @@ the page makes no requests to other sites (except the YouTube or Spotify player,
 - [docs/DESIGN.md](docs/DESIGN.md): screens, behaviour, architecture, how each number is computed
 - [docs/test-scenarios.md](docs/test-scenarios.md): the test plan
 - [docs/PAIN_POINTS.md](docs/PAIN_POINTS.md): what users of other agent visualizers complain about
-- [CONTRIBUTING.md](CONTRIBUTING.md): building it, the tests, and publishing
+- [CHANGELOG.md](CHANGELOG.md): what changed in each version
+- [CONTRIBUTING.md](CONTRIBUTING.md): building it, the tests, pull requests and releases
 
 ## Contributing
 
-Issues and pull requests are welcome. [CONTRIBUTING.md](CONTRIBUTING.md) says how to build it from
-source, run the tests and keep the rooms' saved pieces valid.
+Issues and pull requests are welcome. Changes reach `master` only through pull requests whose CI
+check passes: the typecheck, the token and cost checks, the web build and the extension package.
+[CONTRIBUTING.md](CONTRIBUTING.md) says how to build it from source, run the tests, keep the rooms'
+saved pieces valid and make a release.
 
 ## License
 

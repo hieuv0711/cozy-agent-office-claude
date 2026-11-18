@@ -5,7 +5,7 @@ kitchen or a toy workshop. Each session is one person who acts out what it's doi
 edits, reading when it reads, stirring the pot when it runs a command). The one waiting for you
 steps under a yellow lamp with a "?", and its helpers work beside it.
 
-![The ramen kitchen, in the rain](https://raw.githubusercontent.com/hieuv0711/cozy-agent-office-claude/main/docs/screens/tide-kitchen.png)
+![The ramen kitchen, in the rain](https://raw.githubusercontent.com/hieuv0711/cozy-agent-office-claude/HEAD/docs/screens/tide-kitchen.png)
 
 ## Use it
 

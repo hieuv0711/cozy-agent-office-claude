@@ -1,0 +1,68 @@
+name: Release
+
+# Pushing a version tag such as v0.2.0 on master (CONTRIBUTING.md, "Releasing") publishes that
+# version to npm, the VS Code Marketplace and Open VSX, and makes its GitHub release with the .vsix.
+# All three registries trust this workflow through OIDC (trusted publishing), so no token is stored
+# anywhere. Each step skips a version that is already out, so a failed run can simply be re-run.
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: release
+    permissions:
+      contents: write # the GitHub release
+      id-token: write # trusted publishing to npm, the Marketplace and Open VSX
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false # never use caching in release builds
+      - name: Check the tag
+        # The tag must be on master and match package.json, package-lock.json,
+        # vscode/package.json and a CHANGELOG.md section, whose notes become the release text.
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/master || { echo "$GITHUB_REF_NAME is not on master"; exit 1; }
+          node scripts/release.mjs check "$GITHUB_REF_NAME" > release-notes.md
+          echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run selftest
+      - run: npm run build
+      - run: npm run build:vscode
+      - name: npm
+        run: |
+          if npm view "cozy-agent-office-claude@$VERSION" version > /dev/null 2>&1; then
+            echo "cozy-agent-office-claude@$VERSION is already on npm."
+          else
+            npx --yes npm@12.2.3 publish --ignore-scripts
+          fi
+      - name: VS Code Marketplace
+        run: npx --yes @vscode/vsce@4.1.1 publish --oidc --skip-duplicate --packagePath "cozy-agent-office-claude-$VERSION.vsix"
+      - name: Open VSX
+        run: npx --yes ovsx@1.4.0 publish "cozy-agent-office-claude-$VERSION.vsix" --trusted-publishing --skip-duplicate
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "cozy-agent-office-claude-$VERSION.vsix" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "cozy-agent-office-claude-$VERSION.vsix" \
+              --title "Agent Office $VERSION" --notes-file release-notes.md --verify-tag
+          fi
