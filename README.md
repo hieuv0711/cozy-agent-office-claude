@@ -96,8 +96,8 @@ VS Code or Cursor, or in your browser with one `npx` command ([Getting started](
 ### In VS Code or Cursor
 
 Install **Agent Office** from the
-[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=YOUR-PUBLISHER.cozy-agent-office-claude)
-or [Open VSX](https://open-vsx.org/extension/YOUR-PUBLISHER/cozy-agent-office-claude) (Cursor,
+[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=hieuv0711.cozy-agent-office-claude)
+or [Open VSX](https://open-vsx.org/extension/hieuv0711/cozy-agent-office-claude) (Cursor,
 VSCodium, Windsurf). Then open the **Agent Office** tab in the bottom panel, beside Terminal: the room
 alone, with its name tags and a small bar ("More" opens the whole app in place). For everything at
 once, run **Agent Office: Open the Room in an Editor Tab** from the Command Palette. Start Claude Code

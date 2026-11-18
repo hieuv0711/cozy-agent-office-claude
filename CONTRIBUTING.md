@@ -51,8 +51,9 @@ scenario with the test.
 
 ## Publishing (maintainers)
 
-Fill in the last placeholder first: `YOUR-PUBLISHER`, your publisher ID on the VS Code Marketplace and
-Open VSX, in `vscode/package.json`, `README.md` and this file.
+The npm package is `cozy-agent-office-claude`, and the extension's publisher is `hieuv0711` on both the
+VS Code Marketplace and Open VSX. A fork that publishes its own copy changes the publisher in
+`vscode/package.json`, `README.md` and this file.
 
 ```sh
 # npm: `npx cozy-agent-office-claude`
@@ -61,12 +62,20 @@ npm publish                  # builds the web app first (prepublishOnly)
 
 # the extension: VS Code Marketplace and Open VSX
 npm run build:vscode         # makes cozy-agent-office-claude-<version>.vsix
-npx @vscode/vsce@3 login YOUR-PUBLISHER
+npx @vscode/vsce@3 login hieuv0711
 npx @vscode/vsce@3 publish --packagePath cozy-agent-office-claude-<version>.vsix
 npx ovsx@0 publish cozy-agent-office-claude-<version>.vsix -p <your Open VSX token>
 ```
 
-The Marketplace needs a publisher (https://marketplace.visualstudio.com/manage) and an Azure DevOps
-personal access token with the Marketplace "Manage" scope. Open VSX needs an account, a namespace
-(`npx ovsx@0 create-namespace YOUR-PUBLISHER -p <token>`) and a token from
+`npm publish` needs two-factor authentication on the npm account. The other way is
+`npm stage publish`, then approving the staged version under Staged Packages on npmjs.com, which also
+asks for 2FA.
+
+The Marketplace publisher is managed at https://marketplace.visualstudio.com/manage. `vsce` signs in
+with an Azure DevOps personal access token with the Marketplace "Manage" scope. Azure DevOps retires
+global tokens on December 1, 2026. Uploading the .vsix on that page needs no token: New extension for
+the first version, then Update in the extension's menu.
+
+Open VSX needs an account, the namespace (made once with
+`npx ovsx@0 create-namespace hieuv0711 -p <token>`) and a token from
 https://open-vsx.org/user-settings/tokens. Bump the version in both `package.json` files together.
