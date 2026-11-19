@@ -2,7 +2,7 @@
   "name": "cozy-agent-office-claude",
   "displayName": "Agent Office",
   "description": "Your Claude Code sessions as little people at work in a cozy 3D room: a loft office, a ramen kitchen or a toy workshop. Reads Claude Code's files on this computer; installs nothing into Claude Code.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "hieuv0711",
   "license": "MIT",
   "icon": "media/icon.png",
