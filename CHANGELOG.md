@@ -3,6 +3,22 @@
 Each version goes out to npm, the VS Code Marketplace and Open VSX together, under the same number.
 Its GitHub release carries the `.vsix`.
 
+## 0.1.1 (2026-11-19)
+
+Fixes from a pass over every view at five window sizes, in a VS Code panel and in an editor tab.
+
+- The caption bar shows a waiting session's whole question, under its name and time. Long project
+  names end in "…" instead of squeezing the question, and the yellow button keeps them inside it.
+- In a short, wide VS Code panel, the camera moves in so the people fill the view. Name tags stay
+  whole and no longer lie on top of each other.
+- On a phone or in a narrow window, the details card opens as a sheet over the lower part of the
+  window instead of being squeezed into the room.
+- The top bar drops a whole count when there isn't room, instead of cutting one in half.
+- Sunny weather seen from above no longer makes the white characters and chef hats glow.
+- In Customize, a picture that is still being drawn glows softly instead of showing an empty square.
+- While a past session plays in the room, the caption bar is headed "Replay" instead of "Now".
+- The Team view has a single line under its heading instead of two.
+
 ## 0.1.0 (2026-11-18)
 
 The first public version.

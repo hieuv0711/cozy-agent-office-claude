@@ -1,6 +1,6 @@
 {
   "name": "cozy-agent-office-claude",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Your Claude Code sessions as little people at work in a cozy 3D room: a loft office, a ramen kitchen or a toy workshop. Reads Claude Code's files on this computer, installs nothing into Claude Code, serves on 127.0.0.1 only.",
   "keywords": [
     "claude-code",
