@@ -7,6 +7,7 @@ test-results/
 # built output (npm publish builds it: prepublishOnly)
 dist/
 vscode/app/
+vscode/CHANGELOG.md
 *.vsix
 *.tgz
 
