@@ -638,12 +638,14 @@ Tags that touch get no line (their "for" line says it). At phone widths the help
 
 ---
 
-### CA-08: Tall windows
+### CA-08: Tall windows, and short wide panes
 | Step | Action | Expected Result |
 |------|--------|----------------|
 | 1 | Open on a phone-shaped window | The shot pulls back so the whole room fits |
+| 2 | Open in a short, wide pane (an editor's bottom panel, 1100×320) | The shot pushes in so the people fill the pane, not a thin strip of room; every name tag of someone on the picture stays whole on it, none on top of another |
+| 3 | Open on a 2560×1344 window | The shots stay as framed (neither pulled back nor pushed in) |
 
-**Tests**: portrait fit · **Preconditions**: 390×844 window · **User role**: developer · **Priority**: Low
+**Tests**: portrait fit, short-pane fit · **Preconditions**: 390×844, 1100×320 and 2560×1344 windows · **User role**: developer · **Priority**: Medium
 
 ---
 
@@ -924,9 +926,9 @@ The whole-session chart with three tracks per agent is gone.
 ### HI-09: Watch it in the room, then back
 | Step | Action | Expected Result |
 |------|--------|----------------|
-| 1 | Click "Watch in the room" | The room acts out the session: one person, no card; the top bar says "Watching a replay". A replay bar: the title, "Request 1 of 3 · 08:36" with what you asked, "Now" and the step in words, Previous / Pause / Next, the strip of requests, Slow / Normal / Fast |
+| 1 | Click "Watch in the room" | The room acts out the session: one person, no card; the top bar says "Watching a replay" and the caption rail is headed "Replay", not "Now". A replay bar: the title, "Request 1 of 3 · 08:36" with what you asked, "Now" and the step in words, Previous / Pause / Next, the strip of requests, Slow / Normal / Fast |
 | 2 | Pause; Next; Previous | Request 2 of 3 with its words; back to request 1 |
-| 3 | Click "Back to live", then History | Live sessions and the counts are back; History opens on the same session, its replay where you left it ("2 of 3") |
+| 3 | Click "Back to live", then History | Live sessions and the counts are back, the rail headed "Now" again; History opens on the same session, its replay where you left it ("2 of 3") |
 
 **Tests**: replay in the room · **Preconditions**: HI-04 · **User role**: user · **Priority**: High
 
@@ -1041,8 +1043,8 @@ The whole-session chart with three tracks per agent is gone.
 ### RA-01: Live captions
 | Step | Action | Expected Result |
 |------|--------|----------------|
-| 1 | Read the rail | A caption per active session (name, what it does, how long); waiting ones in yellow |
-| 2 | More than fit | "+N more speaking" |
+| 1 | Read the rail | A caption per active session (name, what it does, how long); waiting ones in yellow, their whole question shown under the name and time |
+| 2 | More than fit | "+N more speaking", inside the rail |
 | 3 | Click "Now" | Every session is listed |
 
 **Tests**: captions · **Preconditions**: demo · **User role**: developer · **Priority**: High
@@ -1146,6 +1148,7 @@ The players are stood in for by blank pages, so the test never goes to the inter
 | Step | Action | Expected Result |
 |------|--------|----------------|
 | 1 | Open at 390×844; visit each view | Usable, readable, no sideways scroll |
+| 2 | Pick someone in the Office | Their card opens as a sheet over the lower part of the window, tall enough to read; the top of the room stays in view |
 
 **Tests**: layout · **Preconditions**: SH-01 · **User role**: developer · **Priority**: Medium
 
@@ -1155,6 +1158,7 @@ The players are stood in for by blank pages, so the test never goes to the inter
 | Step | Action | Expected Result |
 |------|--------|----------------|
 | 1 | A session has a 120-character name | Its tag is cut short with "…" (no wider than about 260 px); the card shows the whole name |
+| 2 | It waits for you | Its caption still shows the whole question (the name is cut short, not the question); the yellow "Go to …" button ends the name in "…" inside the button and stays on screen |
 
 **Tests**: tags · **Preconditions**: mocked session · **User role**: developer · **Priority**: Medium
 

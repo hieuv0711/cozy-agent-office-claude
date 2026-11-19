@@ -475,6 +475,18 @@ button.pomo:hover {
 .cz-thumb:empty {
   background: var(--ink-3);
 }
+/* a picture still being drawn: a slow glow, so an empty square reads as "coming", not missing */
+.cz-thumb.wait {
+  animation: cz-wait 1.4s ease-in-out infinite alternate;
+}
+@keyframes cz-wait {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
 .cz-thumb img {
   width: 64px;
   height: 64px;
@@ -554,10 +566,20 @@ button.pomo:hover {
   min-width: 0;
   flex: none;
 }
-/* with the weather switch the bar is full: the counts give way first */
+/* with the weather switch the bar is full: the counts give way first, a whole count at a time
+   from the end (idle, then helpers) rather than one cut off mid-word: what doesn't fit wraps
+   onto a second row, which the bar's height hides */
 .topbar .counts {
   min-width: 0;
   overflow: hidden;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  height: 32px;
+  row-gap: 12px;
+}
+/* each count as tall as the bar's row, so the row stays centred whichever counts it holds */
+.topbar .counts .count {
+  line-height: 32px;
 }
 .cz-theme {
   margin-left: auto;

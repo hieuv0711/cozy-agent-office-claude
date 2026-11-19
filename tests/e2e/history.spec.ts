@@ -400,6 +400,8 @@ test('HI-09 watch it in the room, then back', async ({ page, errors }) => {
   await expect(page.locator('.labels .chip:not(.left) .chip-name')).toHaveText(['billing'], { timeout: 20_000 });
   await expect(page.locator('aside.panel')).toHaveCount(0);
   await expect(page.locator('.topbar .count.replaying')).toHaveText('Watching a replay');
+  // the rail speaks for the replay, not for now
+  await expect(page.locator('.rail-label .title-card')).toHaveText('Replay');
   // request by request
   await bar.getByRole('button', { name: 'Pause' }).click();
   await bar.getByRole('button', { name: /Next/ }).click();
@@ -414,6 +416,7 @@ test('HI-09 watch it in the room, then back', async ({ page, errors }) => {
   await expect(bar).toHaveCount(0);
   await expect(page.locator('.labels .chip:not(.left)')).toHaveCount(7);
   await expect(page.locator('.topbar .count.replaying')).toHaveCount(0);
+  await expect(page.locator('.rail-label .title-card')).toHaveText('Now');
   // History opens on the same session, its replay where you left it
   await viewTab(page, 'History').click();
   await expect(page.locator('.hx-read h1.hx-title')).toHaveText(CSV);

@@ -590,7 +590,9 @@ input::placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+  /* a waiting question sizes itself to this column (cqi below) */
+  container-type: inline-size;
 }
 .cap {
   display: inline-flex;
@@ -609,6 +611,12 @@ input::placeholder {
 }
 .cap .who {
   flex: none;
+  /* a long project name gives way to what is being said (the tag over the person shows it too) */
+  max-width: 14em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* room for the outline, which overflow would otherwise cut */
+  padding: 0 3px;
   font-size: 15px;
   font-weight: 800;
   -webkit-text-stroke: 4px var(--outline);
@@ -667,6 +675,26 @@ input::placeholder {
 .cap.quiet .say {
   font-size: 18px;
 }
+/* someone waiting for you: their name and the time on a small row, then the question at the
+   caption column's full width, so neither a long name nor a long command cuts it short */
+.cap.ask {
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 0;
+}
+.cap.ask .who,
+.cap.ask .t {
+  font-size: 13px;
+  line-height: 1.15;
+}
+.cap.ask .say {
+  order: 3;
+  flex-basis: 100%;
+  max-width: 100%;
+  text-align: center;
+  /* a little smaller in a narrow column (a laptop), so more of the question shows */
+  font-size: clamp(18px, 5cqi, 22px);
+}
 .caps .more {
   border: 0;
   background: none;
@@ -709,6 +737,11 @@ input::placeholder {
 }
 .answer:hover {
   background: #ffe27a;
+}
+.answer-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* camera controls (in the rail) */
@@ -2052,11 +2085,16 @@ mark {
   .cap .say {
     font-size: 18px;
   }
+  /* the card is a sheet over the lower part of the window: the picture alone is too short here
+     to hold it, and the top of the room (and whoever was picked) stays in view above it */
   .panel {
-    top: 8px;
+    position: fixed;
+    top: max(72px, 24vh);
     right: 8px;
     bottom: 8px;
-    width: calc(100% - 16px);
+    left: 8px;
+    z-index: 30;
+    width: auto;
   }
 }
 
@@ -2075,6 +2113,11 @@ mark {
 }
 .hist-list.glass {
   padding-top: 8px;
+}
+/* a section straight under a page's heading: the heading's rule is enough, not a second one */
+.page .page-head + .glass {
+  padding-top: 0;
+  border-top: 0;
 }
 .narration.small {
   font-size: 18px;

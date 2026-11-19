@@ -36,6 +36,19 @@ test('RA-01 live captions', async ({ page, errors }) => {
     )
     .toBe('ok');
   expect(await caps.count()).toBeLessThanOrEqual(3);
+  // the waiting question is shown whole (its name and time sit on a small row above it)
+  const ask = first.locator('.say .base');
+  await expect(ask).toHaveText(/\?$/);
+  expect(await ask.evaluate((e) => e.scrollWidth <= e.clientWidth + 1), 'the whole question shows').toBe(true);
+  const nameBox = (await first.locator('.who').boundingBox())!;
+  const askBox = (await ask.boundingBox())!;
+  expect(nameBox.y + nameBox.height, 'the name sits above the question').toBeLessThanOrEqual(askBox.y + 2);
+  // everything in the rail fits in it ("+N more speaking" included)
+  const rail = (await page.locator('.rail').boundingBox())!;
+  for (const el of await page.locator('.caps .cap, .caps .more').all()) {
+    const b = (await el.boundingBox())!;
+    expect(b.y >= rail.y - 1 && b.y + b.height <= rail.y + rail.height + 1, `${await el.textContent()} inside the rail`).toBe(true);
+  }
   // "Now": every session listed
   const now = page.locator('.rail-label');
   await expect(now).toContainText('7 sessions');

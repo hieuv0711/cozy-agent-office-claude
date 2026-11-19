@@ -16,11 +16,13 @@ const OFFICE = {
 const KITCHEN_WIDE_TARGET_Z = -2.0;
 const dist = (a: number[], b: number[]) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
-/** How far the shots are pulled back for this stage's shape (tall windows). */
+/** How far the shots are pulled back (tall windows) or pushed in (very wide, short ones) for this stage's shape: fitFor() in web/src/office/camera.ts. */
 async function fitOf(page: Page) {
   const r = await page.locator('.stage canvas').boundingBox();
   const aspect = r!.width / r!.height;
-  return aspect < 1.6 ? Math.min(2.7, 1.6 / aspect) : 1;
+  if (aspect < 1.6) return Math.min(2.7, 1.6 / aspect);
+  if (aspect > 2.6) return Math.max(0.55, 2.6 / aspect);
+  return 1;
 }
 
 async function expectShot(page: Page, shot: readonly number[], what: string) {
@@ -347,6 +349,60 @@ test.describe('on a phone-shaped window', () => {
       if (Math.abs(p.ndcX) > 1.02 || Math.abs(p.ndcY) > 1.02) out.push(`${c} at ${p.ndcX.toFixed(2)},${p.ndcY.toFixed(2)}`);
     }
     expect(out, 'room corners outside the picture').toEqual([]);
+    expectNoErrors(errors);
+  });
+});
+
+/** The name tags shown: any cut by the picture's edge (partly on it), and any lying on another. */
+async function tagLayout(page: Page) {
+  return page.evaluate(() => {
+    const stage = document.querySelector('.stage')!.getBoundingClientRect();
+    const tags = [...document.querySelectorAll<HTMLElement>('.labels .chip, .labels .bot-chip')]
+      .filter((e) => getComputedStyle(e).visibility === 'visible' && getComputedStyle(e).display !== 'none' && e.offsetWidth > 0)
+      .map((e) => ({ name: (e.getAttribute('aria-label') || e.textContent || '').slice(0, 40), r: e.getBoundingClientRect() }));
+    const on = tags.filter((t) => t.r.right > stage.left && t.r.left < stage.right && t.r.bottom > stage.top && t.r.top < stage.bottom);
+    const cut = on.filter((t) => t.r.left < stage.left - 1 || t.r.right > stage.right + 1 || t.r.top < stage.top - 1 || t.r.bottom > stage.bottom + 1).map((t) => t.name);
+    const overlaps: string[] = [];
+    for (let i = 0; i < on.length; i++)
+      for (let j = i + 1; j < on.length; j++) {
+        const a = on[i].r;
+        const b = on[j].r;
+        const x = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const y = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (x > 5 && y > 1) overlaps.push(`${on[i].name} / ${on[j].name}`);
+      }
+    return { shown: on.length, cut, overlaps };
+  });
+}
+
+test.describe('in a short, wide pane (an editor bottom panel)', () => {
+  test.use({ viewport: { width: 1100, height: 320 } });
+
+  test('CA-08 short wide panes', async ({ page, errors }) => {
+    await openScene(page, '?demo&test&embed=panel&weather=clear');
+    await page.waitForTimeout(1500);
+    const k = await fitOf(page);
+    expect(k, 'a pane this shape pushes the shots in').toBeLessThan(0.9);
+    await expectShot(page, OFFICE.wide, 'the wide shot, pushed in');
+    // every tag of someone on the picture is whole on it, and none lies on another
+    await page.waitForTimeout(1000);
+    const tags = await tagLayout(page);
+    test.info().annotations.push({ type: 'tags', description: `${tags.shown} on the picture` });
+    expect(tags.shown, 'tags on the picture').toBeGreaterThan(3);
+    expect(tags.cut, 'tags cut by the edge').toEqual([]);
+    expect(tags.overlaps, 'tags on top of each other').toEqual([]);
+    expectNoErrors(errors);
+  });
+});
+
+test.describe('on a 2560×1344 window', () => {
+  test.use({ viewport: { width: 2560, height: 1344 } });
+
+  test('CA-08 a big monitor keeps the shots as framed', async ({ page, errors }) => {
+    await openScene(page);
+    await page.waitForTimeout(1500);
+    expect(await fitOf(page), 'neither pulled back nor pushed in').toBe(1);
+    await expectShot(page, OFFICE.wide, 'the wide shot as framed');
     expectNoErrors(errors);
   });
 });

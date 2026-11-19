@@ -13,7 +13,23 @@ import { tip } from './Tooltip';
 // (a rough default when there is no history yet), then rests fully lit; past
 // one and a half times that, only its timer turns peach.
 
+// The rail holds about three and a half caption rows. A waiting caption takes one and a half
+// (its name and time on a small row, then the question at full width), so it fits one waiting
+// session and two working ones, or two waiting ones; never more than three captions.
+const ROWS = 3.5;
 const MAX_LINES = 3;
+const rowsOf = (s: OfficeSession) => (s.status === 'needs-you' ? 1.5 : 1);
+
+function fitLines(speakers: OfficeSession[]) {
+  const out: OfficeSession[] = [];
+  let used = 0;
+  for (const s of speakers) {
+    if (out.length === MAX_LINES || used + rowsOf(s) > ROWS) break;
+    used += rowsOf(s);
+    out.push(s);
+  }
+  return out;
+}
 
 function mmss(ms: number) {
   const s = Math.max(0, Math.floor(ms / 1000));
@@ -108,16 +124,18 @@ interface Props {
   showAll: boolean;
   setShowAll: (v: boolean) => void;
   onGoTo: (id: string) => void;
+  /** The room is acting out a past session ("Watch in the room"): the rail speaks for it, not for now. */
+  replaying?: boolean;
 }
 
-export function CaptionRail({ sessions, selected, onSelect, showAll, setShowAll, onGoTo }: Props) {
+export function CaptionRail({ sessions, selected, onSelect, showAll, setShowAll, onGoTo, replaying = false }: Props) {
   const [note, setNote] = useState('');
   const waiting = sessions.filter((s) => s.status === 'needs-you').sort((a, b) => a.statusSince - b.statusSince);
   const working = sessions
     .filter((s) => s.status === 'working')
     .sort((a, b) => (b.now?.since || b.statusSince) - (a.now?.since || a.statusSince));
   const speakers = [...waiting, ...working];
-  const lines = speakers.slice(0, MAX_LINES).map(lineOf);
+  const lines = fitLines(speakers).map(lineOf);
   const rest = speakers.length - lines.length;
   const idle = sessions.filter((s) => s.status === 'idle').length;
   const helpers = sessions.reduce((n, s) => n + s.subsRunning, 0);
@@ -142,7 +160,7 @@ export function CaptionRail({ sessions, selected, onSelect, showAll, setShowAll,
           onClick={() => setShowAll(!showAll)}
           {...tip(showAll ? 'Back to the few who are speaking now' : 'List every session and what it is doing, not just the ones speaking now', showAll ? 'Every session' : 'Now')}
         >
-          <span className="title-card">Now</span>
+          <span className="title-card">{replaying ? 'Replay' : 'Now'}</span>
           <span>
             {sessions.length} session{sessions.length === 1 ? '' : 's'}
             {helpers ? ` · ${helpers} helper${helpers === 1 ? '' : 's'}` : ''}
@@ -201,7 +219,8 @@ export function CaptionRail({ sessions, selected, onSelect, showAll, setShowAll,
             onClick={answer}
             {...tip(canTerminal ? `Brings ${target.name}'s Terminal tab to the front, so you can answer there` : `${target.name} runs without a terminal; this turns the camera to it`)}
           >
-            {canTerminal ? `Answer in terminal · ${target.name}` : `Go to ${target.name}`}
+            {/* its own box, so a long project name ends in "…" inside the button */}
+            <span className="answer-label">{canTerminal ? `Answer in terminal · ${target.name}` : `Go to ${target.name}`}</span>
           </button>
         )}
         {note && (

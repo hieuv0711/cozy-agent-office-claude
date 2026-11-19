@@ -1,5 +1,6 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Bloom, EffectComposer, FXAA, SMAA, Vignette } from '@react-three/postprocessing';
+import type { BloomEffect } from 'postprocessing';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import type { OfficeSession } from '../api';
@@ -22,6 +23,7 @@ import { catalogFor, THEMES } from './themes';
 import { ThumbMaker } from './Thumbs';
 import type { ThemeId } from './types';
 import { SceneWeather } from './weather/SceneWeather';
+import { U as weatherU } from './weather/runtime';
 
 // The live scene: your Claude Code sessions as people at work in the theme's
 // room (an office, a ramen kitchen, a toy workshop), with the weather outside.
@@ -310,13 +312,29 @@ function Scene({ theme, placed, selected, onSelect, anchors, labelPos }: { theme
       <CameraRig anchors={anchors} selected={selected} />
       {DIAG.fx && (
         <EffectComposer multisampling={DIAG.msaa}>
-          <Bloom mipmapBlur intensity={DIAG.bloom ? 0.7 : 0} luminanceThreshold={0.82} luminanceSmoothing={0.2} />
+          <WeatherBloom strength={DIAG.bloom ? 0.7 : 0} />
           <Vignette offset={0.3} darkness={0.55} />
           {DIAG.aa === 'smaa' ? <SMAA /> : DIAG.aa === 'fxaa' ? <FXAA /> : <></>}
         </EffectComposer>
       )}
     </>
   );
+}
+
+/**
+ * Bloom, eased off in sunshine. It is there for lamps glowing in the night; in daylight it turned
+ * the sunlit tops of the white bots and chef's hats into glowing blobs, worst from above.
+ */
+function WeatherBloom({ strength }: { strength: number }) {
+  const ref = useRef<BloomEffect>(null);
+  useFrame(() => {
+    const b = ref.current;
+    if (!b) return;
+    const sun = weatherU.uSun.value; // 0..1, fading with the weather
+    b.intensity = strength * (1 - 0.55 * sun);
+    b.luminanceMaterial.threshold = 0.82 + 0.12 * sun;
+  });
+  return <Bloom ref={ref} mipmapBlur intensity={strength} luminanceThreshold={0.82} luminanceSmoothing={0.2} />;
 }
 
 /**
